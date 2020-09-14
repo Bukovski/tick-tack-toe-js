@@ -3,12 +3,21 @@
 	const table = document.getElementById("table");
 	const fields = table.getElementsByTagName("td");
 	
+	const restartButton = document.getElementById('restart');
 	
-	activateFields(fields);
+	
+	restartButton.addEventListener('click', startGame);
+	
+	startGame();
+	
+	function startGame() {
+		activateFields(fields);
+	}
 	
 	
 	function activateFields(fields) {
 		for (let i = 0; i < fields.length; i++) {
+			fields[ i ].innerHTML = '';
 			fields[ i ].addEventListener("click", clickField);
 		}
 	}
@@ -99,10 +108,11 @@
 	
 	
 	function gameOver({ fields, winner }) {
-		showWinner(winner);
 		stopFieldListeners(fields);
 		
+		showWinner(winner);
 	}
+	
 	
 	function stopFieldListener(field) {
 		field.removeEventListener('click', clickField);
@@ -115,11 +125,15 @@
 	}
 	
 	function showWinner(winner) {
-		if (winner !== "Draw") {
+		if (winner !== "draw") {
 			alert(winner + " is winner");
 		} else {
 			alert('Draw game');
 		}
 	}
-
+	
+	
+	
+	
+	
 })();
