@@ -24,12 +24,36 @@
 	}
 	
 	function checkWinner() {
-		if (
-			fields[ 0 ].innerHTML === fields[ 1 ].innerHTML
-			&& fields[ 0 ].innerHTML === fields[ 2 ].innerHTML
-		) {
-			console.log("Winner", currentGamer)
+		const winningCombinations = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6],
+		];
+		
+		function fieldComparison (combination, callback) {
+			if (
+				fields[ combination[ 0 ] ].innerHTML === fields[ combination[ 1 ] ].innerHTML
+				&& fields[ combination[ 0 ] ].innerHTML === fields[ combination[ 2 ] ].innerHTML
+				&& fields[ combination[ 0 ] ].innerHTML !== ""
+			) {
+				callback();
+			}
 		}
+		
+		for (let i = 0, combinationLength = winningCombinations.length; i < combinationLength; i++) {
+			const combination = winningCombinations[ i ];
+			
+			fieldComparison(combination, function () {
+				console.log("Winner", currentGamer)
+			});
+		}
+		
+		
 	}
 
 
