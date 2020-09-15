@@ -1,23 +1,42 @@
 (function () {
-
-	const table = document.getElementById("table");
-	const fields = table.getElementsByTagName("td");
 	
-	const restartButton = document.getElementById('restart');
-	const currentGamerField = document.getElementById('current-gamer');
-	
-	let currentGamer = "X";
-	
-	
-	restartButton.addEventListener('click', startGame);
-	
-	startGame();
-	
-	function startGame() {
-		activateFields(fields);
-		showCurrentGamer(currentGamer);
+	const FIELDS = {
+		CELLS: document.getElementById("table").getElementsByTagName("td"),
+		RESTART_BUTTON: document.getElementById('restart'),
+		CURRENT_GAMER: document.getElementById('current-gamer')
 	}
 	
+	
+	const toggleGamer = (function () {
+		let currentGamer = "X"; // default gamer
+		let nextGamer = "";
+		
+		return function () {
+			nextGamer = currentGamer;
+			currentGamer = (currentGamer === 'X') ? "O" : "X";
+			
+			return {
+				current: currentGamer,
+				next: nextGamer
+			}
+		}
+	})()
+	
+	
+	function clickField() {
+		const currentGamer = toggleGamer();
+		
+		this.innerHTML = currentGamer.current;
+		
+		stopFieldListener(this);
+		showCurrentGamer(currentGamer.next);
+		
+		const winner = checkWinner(FIELDS.CELLS);
+		
+		if (!!winner) {
+			gameOver({ fields: FIELDS.CELLS, winner });
+		}
+	}
 	
 	function activateFields(fields) {
 		for (let i = 0; i < fields.length; i++) {
@@ -26,33 +45,12 @@
 		}
 	}
 	
-	
-	function toggleNextGamer(currentGamer) {
-		if (currentGamer === 'X') {
-			return 'O';
-		} else {
-			return 'X';
-		}
+	function startGame() {
+		const currentGamer = toggleGamer();
+		
+		activateFields(FIELDS.CELLS);
+		showCurrentGamer(currentGamer.next);
 	}
-	
-	
-	function clickField() {
-		this.innerHTML = currentGamer;
-		
-		stopFieldListener(this);
-		
-		currentGamer = toggleNextGamer(currentGamer);
-		
-		showCurrentGamer(currentGamer);
-		
-		
-		const winner = checkWinner(fields);
-		
-		if (!!winner) {
-			gameOver({ fields, winner });
-		}
-	}
-	
 	
 	
 	/**
@@ -111,14 +109,6 @@
 		return "";
 	}
 	
-	
-	function gameOver({ fields, winner }) {
-		stopFieldListeners(fields);
-		showWinner(winner);
-		showCurrentGamer("-");
-	}
-	
-	
 	function stopFieldListener(field) {
 		field.removeEventListener('click', clickField);
 	}
@@ -138,11 +128,18 @@
 	}
 	
 	function showCurrentGamer(gamer) {
-		currentGamerField.innerHTML = gamer;
+		FIELDS.CURRENT_GAMER.innerHTML = gamer;
+	}
+	
+	function gameOver({ fields, winner }) {
+		stopFieldListeners(fields);
+		showWinner(winner);
+		showCurrentGamer("-");
 	}
 	
 	
+	startGame();
 	
-	
+	FIELDS.RESTART_BUTTON.addEventListener('click', startGame);
 	
 })();
