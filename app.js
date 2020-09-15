@@ -4,6 +4,9 @@
 	const fields = table.getElementsByTagName("td");
 	
 	const restartButton = document.getElementById('restart');
+	const currentGamerField = document.getElementById('current-gamer');
+	
+	let currentGamer = "X";
 	
 	
 	restartButton.addEventListener('click', startGame);
@@ -12,6 +15,7 @@
 	
 	function startGame() {
 		activateFields(fields);
+		showCurrentGamer(currentGamer);
 	}
 	
 	
@@ -22,8 +26,6 @@
 		}
 	}
 	
-	
-	let currentGamer = "X";
 	
 	function toggleNextGamer(currentGamer) {
 		if (currentGamer === 'X') {
@@ -40,6 +42,9 @@
 		stopFieldListener(this);
 		
 		currentGamer = toggleNextGamer(currentGamer);
+		
+		showCurrentGamer(currentGamer);
+		
 		
 		const winner = checkWinner(fields);
 		
@@ -109,8 +114,8 @@
 	
 	function gameOver({ fields, winner }) {
 		stopFieldListeners(fields);
-		
 		showWinner(winner);
+		showCurrentGamer("-");
 	}
 	
 	
@@ -130,6 +135,10 @@
 		} else {
 			alert('Draw game');
 		}
+	}
+	
+	function showCurrentGamer(gamer) {
+		currentGamerField.innerHTML = gamer;
 	}
 	
 	
